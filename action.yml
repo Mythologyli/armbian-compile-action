@@ -101,19 +101,7 @@ runs:
         DEBUG=yes \
         COMPRESS_OUTPUTIMAGE=sha,gpg,xz
     - name: Upload
-      if: inputs.release-id != '' && inputs.github-token != ''
-      uses: xresloader/upload-to-github-release@v1
-      env:
-          GITHUB_TOKEN: ${{ inputs.github-token }}
+      uses: actions/upload-artifact@v3
       with:
-        release_id: ${{ inputs.release-id }}
-        file: "./build/output/images/*.img.xz;./build/output/images/*.img.xz.sha;./build/output/debs/linux-*.deb"
-        draft: false
-        overwrite: true
-    - name: Rollback release
-      if: failure() && inputs.release-id != '' && inputs.github-token != ''
-      uses: author/action-rollback@stable
-      env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
-      with:
-        release_id: ${{ inputs.release-id }}
+        name: ${{ inputs.board }}
+        path: ./build/output/images/*.img.xz
